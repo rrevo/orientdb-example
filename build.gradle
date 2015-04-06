@@ -5,3 +5,12 @@ sourceCompatibility = 1.7
 version = '1.0'
 
 mainClassName = 'io.github.rrevo.orientdbex.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.orientechnologies:orientdb-graphdb:2.0.5'
+    compile 'com.google.guava:guava:18.0'
+}
