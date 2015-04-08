@@ -2,6 +2,7 @@ package io.github.rrevo.orientdbex;
 
 import io.github.rrevo.orientdbex.schemahybrid.TypedElementExample;
 import io.github.rrevo.orientdbex.schemaless.ElementExample;
+import io.github.rrevo.orientdbex.schemaorient.OrientTypedElementExample;
 
 public class Main {
 
@@ -13,6 +14,9 @@ public class Main {
 
         TypedElementExample typedElementExample = new TypedElementExample(getNextDbUrl());
         typedElementExample.run();
+
+        OrientTypedElementExample oTypedElementExample = new OrientTypedElementExample(getNextDbUrl());
+        oTypedElementExample.run();
     }
 
     private static String getNextDbUrl() {
