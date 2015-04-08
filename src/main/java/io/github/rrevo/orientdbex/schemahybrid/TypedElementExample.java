@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.frames.FramedGraph;
 import com.tinkerpop.frames.FramedGraphFactory;
 import com.tinkerpop.frames.VertexFrame;
@@ -27,6 +28,9 @@ public class TypedElementExample extends AbstractExample {
 
     @Override
     protected void runGraphExamples(OrientGraphFactory graphFactory) {
+        OrientGraphNoTx graphNoTx = graphFactory.getNoTx();
+        graphNoTx.createEdgeType("knows");
+
         OrientGraph graph = graphFactory.getTx();
         FramedGraphFactory factory = new FramedGraphFactory();
         FramedGraph manager = factory.create(graph);

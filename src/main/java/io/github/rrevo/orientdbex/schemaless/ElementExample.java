@@ -5,6 +5,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import io.github.rrevo.orientdbex.core.AbstractExample;
 
 import java.util.Iterator;
@@ -17,6 +18,9 @@ public class ElementExample extends AbstractExample {
 
     @Override
     protected void runGraphExamples(OrientGraphFactory graphFactory) {
+        OrientGraphNoTx graphNoTx = graphFactory.getNoTx();
+        graphNoTx.createEdgeType("knows");
+
         OrientGraph graph = graphFactory.getTx();
         try {
             populateData(graph);
@@ -24,6 +28,15 @@ public class ElementExample extends AbstractExample {
         } finally {
             graph.shutdown();
         }
+    }
+
+    private void populateData(OrientGraph graph) {
+        Vertex luca = graph.addVertex(null);
+        luca.setProperty( "name", "Luca" );
+        Vertex marko = graph.addVertex(null);
+        marko.setProperty( "name", "Marko" );
+        graph.addEdge(null, luca, marko, "knows");
+        graph.commit();
     }
 
     private void findData(OrientGraph graph) {
@@ -41,14 +54,5 @@ public class ElementExample extends AbstractExample {
         Preconditions.checkNotNull(marko);
         System.out.printf("Found Marko: %s%n", marko);
         Preconditions.checkArgument(!vertices.hasNext());
-    }
-
-    private void populateData(OrientGraph graph) {
-        Vertex luca = graph.addVertex(null);
-        luca.setProperty( "name", "Luca" );
-        Vertex marko = graph.addVertex(null);
-        marko.setProperty( "name", "Marko" );
-        graph.addEdge(null, luca, marko, "knows");
-        graph.commit();
     }
 }
