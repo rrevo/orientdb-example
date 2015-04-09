@@ -1,7 +1,9 @@
 package io.github.rrevo.orientdbex.schemaorient;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.*;
@@ -9,6 +11,7 @@ import io.github.rrevo.orientdbex.core.AbstractExample;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * See http://www.orientechnologies.com/docs/last/Graph-Schema.html
@@ -79,22 +82,34 @@ public class OrientTypedElementExample extends AbstractExample {
     }
 
     OrientVertex findPersonByName(OrientGraph graph, String name) {
-        for (Vertex vertex : graph.getVerticesOfClass("Person")) {
-            if (vertex.getProperty("name").equals(name)) {
+        try (OrientDynaElementIterable resultsIter = graph.command(
+                new OCommandSQL("select from Person where name = '" + name + "'")).execute()) {
+            List<Object> results = Lists.newArrayList(resultsIter);
+            if (results.isEmpty()) {
+                return null;
+            } else {
+                Preconditions.checkArgument(results.size() == 1);
+                Vertex vertex = (Vertex) results.get(0);
+                Preconditions.checkArgument(vertex.getProperty("name").equals(name));
                 OrientVertex orientVertex = (OrientVertex) vertex;
                 return orientVertex;
             }
         }
-        return null;
     }
 
     OrientVertex findVertexByName(OrientGraph graph, String name) {
-        for (Vertex vertex : graph.getVertices()) {
-            if (vertex.getProperty("name").equals(name)) {
+        try (OrientDynaElementIterable resultsIter = graph.command(
+                new OCommandSQL("select from V where name = '" + name + "'")).execute()) {
+            List<Object> results = Lists.newArrayList(resultsIter);
+            if (results.isEmpty()) {
+                return null;
+            } else {
+                Preconditions.checkArgument(results.size() == 1);
+                Vertex vertex = (Vertex) results.get(0);
+                Preconditions.checkArgument(vertex.getProperty("name").equals(name));
                 OrientVertex orientVertex = (OrientVertex) vertex;
                 return orientVertex;
             }
         }
-        return null;
     }
 }
